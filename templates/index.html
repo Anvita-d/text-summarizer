@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>Text Summarizer</title>
+    <style>
+        .container {
+            display: flex;
+            align-content: center;
+        }
+
+    </style>
+</head>
+<body>
+    <div>
+        <h1 style="background-color: burlywood;border:2px solid black;text-align: center; width: 100%">Text Summarizer</h1>
+        <div class="container" style="margin-left: 200px;">
+        <div class="summarizer">
+        <h2 class="sum" style="margin-bottom: 5px; background-color: gainsboro; border: 1px solid black;width:525px; text-align: center;">Summarizer</h3>
+        <textarea id="userInput" placeholder="Enter your text here..." style="width:520px; height:250px;"></textarea>
+        <div class="buttons" style="margin-top: 10px;">
+            <button onclick="summarize('bert')">BERT Summarization</button>
+            <button onclick="summarize('transformers')">Transformers Summarization</button>
+            <button onclick="summarize('bart')">BART Summarization</button>
+            <button onclick="summarize('extractive')">Tfidf</button>
+        </div>
+        </div>
+        <div class="generated-summary" style="margin-left: 50px;">
+        <h2 style="margin-bottom: 5px;
+                   background-color: gainsboro; 
+                   border: 1px solid black;width:520px;
+                   text-align: center;">Generated Summary</h2>
+        <div style="
+            width:520px; 
+            height:254px;
+            border:0.5px solid black;
+        
+        ">
+            
+            <p id="summaryText" style="margin: 0px; font-family: monospace; padding: 3px; line-height: 1.25;"></p>
+        </div>
+        </div>
+        </div>
+    </div>
+    <script>
+        function summarize(method) {
+            var text = document.getElementById('userInput').value;
+            fetch('/summarize', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text: text, method: method }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('summaryText').innerText = data[method + '_summary'];
+            });
+        }
+    </script>
+</body>
+</html>
